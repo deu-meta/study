@@ -1,0 +1,111 @@
+[general]
+#RemoteNickFormat defines how remote users appear on this bridge
+#The string "{NICK}" (case sensitive) will be replaced by the actual nick.
+#The string "{NOPINGNICK}" (case sensitive) will be replaced by the actual nick / username, but with a ZWSP inside the nick, so the irc user with the same nick won't get pinged.
+#The string "{USERID}" (case sensitive) will be replaced by the user ID.
+#The string "{BRIDGE}" (case sensitive) will be replaced by the sending bridge
+#The string "{LABEL}" (case sensitive) will be replaced by label= field of the sending bridge
+#The string "{PROTOCOL}" (case sensitive) will be replaced by the protocol used by the bridge
+#The string "{GATEWAY}" (case sensitive) will be replaced by the origin gateway name that is replicating the message.
+#The string "{CHANNEL}" (case sensitive) will be replaced by the origin channel name used by the bridge
+#The string "{TENGO}" (case sensitive) will be replaced by the output of the RemoteNickFormat script under [tengo]
+#OPTIONAL (default empty)
+RemoteNickFormat = "[{PROTOCOL}-{CHANNEL}] {NICK}"
+
+
+[discord]
+    [discord.study]
+    # Token (REQUIRED) is the token to connect with Discord API
+    # You can get your token by following the instructions on
+    # https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
+    # If you want roles/groups mentions to be shown with names instead of ID, you'll need to give your bot the "Manage Roles" permission.
+    #Token = {USE .env instead}
+
+    # Server (REQUIRED) is the ID or name of the guild to connect to, selected from the guilds the bot has been invited to
+    #Server = {USE .env instead}
+
+    # ShowEmbeds shows the title, description and URL of embedded messages (sent by other bots)
+    ShowEmbeds = true
+
+    # UseUserName shows the username instead of the server nickname
+    UseUserName = false
+
+    # AutoWebhooks automatically configures message sending in the style of puppets.
+    # This is an easier alternative to manually configuring "WebhookURL" for each gateway,
+    # as turning this on will automatically load or create webhooks for each channel.
+    # This feature requires the "Manage Webhooks" permission (either globally or as per-channel).
+    AutoWebhooks = true
+
+    # EditDisable disables sending of edits to other bridges
+    EditDisable = false
+
+    # EditSuffix specifies the message to be appended to every edited message
+    # Example: " (edited)"
+    EditSuffix = " (edited)"
+
+    # ShowJoinPart emits messages that show joins/parts from other bridges
+    # Supported from the following bridges: irc, mattermost, slack, discord
+    ShowJoinPart = false
+
+    RemoteNickFormat = "{NICK}"
+
+
+[slack]
+    [slack.gdsc]
+    #Token to connect with the Slack API
+    #You'll have to use a test/api-token using a dedicated user and not a bot token.
+    #See https://github.com/42wim/matterbridge/issues/75 for more info.
+    #Use https://api.slack.com/custom-integrations/legacy-tokens
+    #REQUIRED (when not using webhooks)
+    #Token = {USE .env instead}
+
+    #Extra slack specific debug info, warning this generates a lot of output.
+    #OPTIONAL (default false)
+    Debug = "true"
+
+    #Enable to show users joins/parts from other bridges
+    #Currently works for messages from the following bridges: irc, mattermost, slack, discord
+    #OPTIONAL (default false)
+    ShowJoinPart = false
+
+    #Opportunistically preserve threaded replies between bridges
+    #that support threading
+    #OPTIONAL (default false)
+    PreserveThreading = true
+
+
+[[gateway]]
+name="gateway-자유"
+enable = true
+
+    [[gateway.inout]]
+    account = "discord.study"
+    channel = "자유"
+
+    [[gateway.inout]]
+    account = "slack.gdsc"
+    channel = "study-metaverse"
+
+[[gateway]]
+name = "gateway-기타"
+enable = true
+
+    [[gateway.in]]
+    account = "discord.study"
+    channel = "질문"
+
+    [[gateway.in]]
+    account = "discord.study"
+    channel = "공지"
+
+    [[gateway.in]]
+    account = "discord.study"
+    channel = "강의자료"
+
+    [[gateway.in]]
+    account = "discord.study"
+    channel = "숙제"
+
+    [[gateway.out]]
+    account = "slack.gdsc"
+    channel = "study-metaverse"
